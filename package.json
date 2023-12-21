@@ -11,9 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mantine/core": "7.1.5",
-    "@mantine/hooks": "^7.2.2",
-    "@mantine/modals": "^7.2.2",
+    "@mantine/core": "^7.3.2",
+    "@mantine/hooks": "^7.3.2",
+    "@mantine/modals": "^7.3.2",
     "@mui/icons-material": "^5.14.15",
     "@mui/material": "^5.14.15",
     "@thirdweb-dev/react": "^4.0.8",

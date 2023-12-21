@@ -33,7 +33,7 @@ const AppProvider = ({ children }: IAppProvider) => {
     const connectWallet = async () => {
         const connection = await connect({
             webWalletUrl: "https://web.argent.xyz",
-            dappName: "Cycle Stark",
+            dappName: "Kiboko Oframp",
         });
 
         if (connection && connection.isConnected) {

@@ -43,7 +43,7 @@ function OfframpPage() {
 const [exchangeRate, setExchangeRate] = useState<number>(0);
 const [baseCoinRate, setBaseCoin] = useState<number>(0);
 
-const {address}=useAppContext();
+const {address,handleConnetWalletBtnClick}=useAppContext();
 
 const getExchangeRate = async (symbol: any, amount: any) => {
   try {
@@ -247,8 +247,9 @@ try{
 
           <Box sx={{ mt: "7%", display: "flex", justifyContent: "center" }}>
             <PinkButton 
-             disabled={!address} 
-             onClick={handleButtonClick}
+            
+             onClick={address ? handleButtonClick : handleConnetWalletBtnClick}
+
 
              sx={{ width: "100%" }}> 
             {address?'Offramp':'Connect wallet'}
