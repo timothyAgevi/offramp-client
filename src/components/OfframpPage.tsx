@@ -108,8 +108,7 @@ try{
     // Ensure both phone number and amount to receive are filled
     if (recipientPhoneNumber && amountToReceive) {
       try {
-        const response = await axios.post(
-          // "https://gm0ojpbh6f.execute-api.eu-west-1.amazonaws.com/dev/api/convert/",
+        const response = await axios.post(         
           "https://offrampsdk-production.up.railway.app/api/tofiat/",
           {
             phoneNumber: recipientPhoneNumber,
