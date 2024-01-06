@@ -57,7 +57,7 @@ const getExchangeRate = async (symbol: any, amount: any) => {
       if (data && data.data && data.data.rates && data.data.rates.KES) {
         const baseCoinRate: number = data.data.rates.KES;
         const amountInKesReceived: number = amount * baseCoinRate;
-
+//TODOS: Add deduction and make it accept diffrent currencies
         setExchangeRate(Number(amountInKesReceived.toFixed(2))); // convert to number and set state
         setBaseCoin(baseCoinRate);
         return amountInKesReceived;
