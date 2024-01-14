@@ -103,28 +103,35 @@ try{
     setRecipientPhoneNumber(phoneNumber);
   };
 
-  //event handler for Offramp button
-  const handleButtonClick = async () => {
-    // Ensure both phone number and amount to receive are filled
-    if (recipientPhoneNumber && amountToReceive) {
-      try {
-        const response = await axios.post(         
-          "https://offrampsdk-production.up.railway.app/api/tofiat/",
-          {
-            phoneNumber: recipientPhoneNumber,
-            amountToReceive: amountToReceive,
-          }
-        );
+ // Update the function to use the state variables directly
+const handleButtonClick = async () => {
+  // Ensure both phone number and amount to receive are filled
+  if (recipientPhoneNumber && amountToReceive) {
+    try {
+      // Collect all information from the custom text fields
+      const requestData = {
+        phoneNumber: recipientPhoneNumber,
+        amountToReceive: amountToReceive,
+        selectedToken: selectedToken,
+        numberOfTokens: numberOfTokens,
+      };
 
-        // Handle the response as needed
-        console.log("Conversion API Response:", response.data);
-      } catch (error) {
-        console.error("Error making API request", error);
-      }
-    } else {
-      console.warn("Phone number and amount to receive are required.");
+      // Send a request to the specified API endpoint
+      const response = await axios.post(
+        "https://offrampsdk-production.up.railway.app/api/tofiattransactions/",
+        requestData
+      );
+
+      // Handle the response as needed
+      console.log("Conversion API Response:", response.data);
+    } catch (error) {
+      console.error("Error making API request", error);
     }
-  };
+  } else {
+    console.warn("Phone number and amount to receive are required.");
+  }
+};
+
 
   return (
     <>
