@@ -10,7 +10,7 @@ const HomePage = () => {
   const [currentPage, setCurrentPage] = useState("onramp");
   const router = useRouter();
   const handlePageToggle = () => {
-    setCurrentPage((current) => (current === "onramp" ? "offramp" : "onramp"));
+    setCurrentPage((current: string) => (current === "onramp" ? "offramp" : "onramp"));
   };
 
   useEffect(() => {
