@@ -118,7 +118,7 @@ const handleButtonClick = async () => {
 
       // Send a request to the specified API endpoint
       const response = await axios.post(
-        "https://offrampsdk-production.up.railway.app/api/tofiattransactions/",
+        "https://offrampsdk-production.up.railway.app/api/offramptransaction/",
         requestData
       );
 

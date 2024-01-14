@@ -133,27 +133,36 @@ function OnrampPage() {
   };
   //event handler for Offramp button
   const handleButtonClick = async () => {
-    // Ensure both phone number and amount to receive are filled
-    if (recipientPhoneNumber && amountToReceive) {
+    // Ensure all required fields are filled
+    if (recipientPhoneNumber && amountToReceive && selectedToken && numberOfTokens && selectedNetwork && walletAddress) {
       try {
+        // Collect all information from the custom text fields
+        const requestData = {
+          phoneNumber: recipientPhoneNumber,
+          amountToReceive: amountToReceive,
+          selectedToken: selectedToken,
+          numberOfTokens: numberOfTokens,
+          selectedNetwork: selectedNetwork,
+          walletAddress: walletAddress,
+        };
+  
+        // Send a request to the specified API endpoint
         const response = await axios.post(
-          // "https://gm0ojpbh6f.execute-api.eu-west-1.amazonaws.com/dev/api/convert/",
-          "https://offrampsdk-production.up.railway.app/api/tocrypto/",
-          {
-            phoneNumber: recipientPhoneNumber,
-            amountToReceive: amountToReceive,
-          }
+          "https://offrampsdk-production.up.railway.app/api/onramptransaction/",
+          requestData
         );
-
+  
         // Handle the response as needed
         console.log("Conversion API Response:", response.data);
       } catch (error) {
         console.error("Error making API request", error);
       }
     } else {
-      console.warn("Phone number and amount to receive are required.");
+      console.warn("All fields are required.");
     }
   };
+  
+
 
   return (
     <>
