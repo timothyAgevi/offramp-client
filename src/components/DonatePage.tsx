@@ -21,9 +21,24 @@ const [selectedToken, setSelectedToken] = useState("BUSD");
 const [numberOfTokens, setNumberOfTokens] = useState("");
 const [phoneNumber, setPhoneNumber] = useState("");
 const [amountToSend, setAmountToSend] = useState("");
+const {handleConnetWalletBtnClick,address}=useAppContext()
 
 
-  const {handleConnetWalletBtnClick,address}=useAppContext()
+const handleTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const token = event.target.value;
+    setSelectedToken(token);
+    // Call getExchangeRate function with the selected token and numberOfTokens
+    // getExchangeRate(token, numberOfTokens);
+  };
+
+  const handleNumberOfTokensChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const tokens = event.target.value;
+    setNumberOfTokens(tokens);
+   
+    
+  };
 
 }
 export default DonatePage;
