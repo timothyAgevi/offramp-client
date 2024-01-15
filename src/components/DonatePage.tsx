@@ -86,11 +86,16 @@ function DonatePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Box>
         <Container maxWidth="sm" sx={{ mt: "50px" }}>
+
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
               <Box>
+
+                <text> VIA Crypto</text>
+
                 <Typography sx={{ mb: "2%" }}>Select Token :</Typography>
                 <CustomTextField
                   defaultValue="BUSD"
@@ -127,6 +132,7 @@ function DonatePage() {
                 </CustomTextField>
               </Box>
             </Grid>
+
             <Grid item xs={12} md={6}>
               <Box sx={{}}>
                 <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
@@ -149,7 +155,55 @@ function DonatePage() {
               </Box>
             </Grid>
           </Grid>
-        </Container>
+
+          <text> VIA FIAT</text>
+          <Grid item xs={12} md={6}>
+              {" "}
+              <Box sx={{ mt: "7%" }}>
+                <Typography sx={{ mb: "2%" }}>
+                  Sender's phone number :
+                </Typography>
+                <CustomTextField
+                  placeholder="+254 333 333"
+                  sx={{ width: "100%" }}
+                  onChange={handlePhoneNumberChange}
+                  inputProps={{
+                    sx: {
+                      "&::placeholder": {
+                        color: "#fff",
+                      },
+                      color: "#fff",
+                      backgroundColor: "grey",
+                      borderRadius: "12px",
+                    },
+                  }}
+                ></CustomTextField>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Box sx={{ mt: "7%" }}>
+                <Typography sx={{ mb: "2%" }}>Amount to Send :</Typography>
+                <CustomTextField
+                  value={amountToSend}
+                  placeholder="Amount to receive"
+                  sx={{ width: "100%" }}
+                  onChange={handleNumberOfTokensChange} // Assuming you want to use the same function
+                  inputProps={{
+                    sx: {
+                      "&::placeholder": {
+                        color: "#fff",
+                      },
+                      color: "#fff",
+                      backgroundColor: "grey",
+                      borderRadius: "12px",
+                    },
+                  }}
+                ></CustomTextField>
+              </Box>
+            </Grid>
+            
+          </Container>
       </Box>
     </>
   );
