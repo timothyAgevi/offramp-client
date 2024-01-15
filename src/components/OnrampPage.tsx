@@ -45,7 +45,7 @@ const networks = [
 function OnrampPage() {
   const [selectedToken, setSelectedToken] = useState("BUSD");
   const [numberOfTokens, setNumberOfTokens] = useState("");
-  const [recipientPhoneNumber, setRecipientPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [amountToReceive, setAmountToReceive] = useState("");
   const [selectedNetwork, setSelectedNetwork] = useState("Starknet");
   const [walletAddress, setWalletAddress] = useState("");
@@ -106,12 +106,12 @@ function OnrampPage() {
     }
   };
 
-  //event handler for RecipientPhoneNumberChange
-  const handleRecipientPhoneNumberChange = (
+  //event handler for phoneNumberChange
+  const handlePhoneNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const phoneNumber = event.target.value;
-    setRecipientPhoneNumber(phoneNumber);
+    setPhoneNumber(phoneNumber);
   };
 
   //event handler for Network Change
@@ -134,11 +134,11 @@ function OnrampPage() {
   //event handler for Offramp button
   const handleButtonClick = async () => {
     // Ensure all required fields are filled
-    if (recipientPhoneNumber && amountToReceive && selectedToken && numberOfTokens && selectedNetwork && walletAddress) {
+    if (phoneNumber && amountToReceive && selectedToken && numberOfTokens && selectedNetwork && walletAddress) {
       try {
         // Collect all information from the custom text fields
         const requestData = {
-          phoneNumber: recipientPhoneNumber,
+          phoneNumber: phoneNumber,
           amountToReceive: amountToReceive,
           selectedToken: selectedToken,
           numberOfTokens: numberOfTokens,
@@ -245,7 +245,7 @@ function OnrampPage() {
                 <CustomTextField
                   placeholder="+254 333 333"
                   sx={{ width: "100%" }}
-                  onChange={handleRecipientPhoneNumberChange}
+                  onChange={handlePhoneNumberChange}
                   inputProps={{
                     sx: {
                       "&::placeholder": {

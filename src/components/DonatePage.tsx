@@ -16,13 +16,12 @@ import { useState } from "react";
 import axios from "axios";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
 
-function DonatePade(){
-    const [selectedToken, setSelectedToken] = useState("BUSD");
-  const [numberOfTokens, setNumberOfTokens] = useState("");
+function DonatePage(){
+const [selectedToken, setSelectedToken] = useState("BUSD");
+const [numberOfTokens, setNumberOfTokens] = useState("");
 
-  // state for currency rate
-  const [exchangeRate, setExchangeRate] = useState<number>(0);
-  const [baseCoinRate, setBaseCoin] = useState<number>(0);
+
   const {handleConnetWalletBtnClick,address}=useAppContext()
-  
+
 }
+export default DonatePage;
