@@ -46,7 +46,7 @@ function OnrampPage() {
   const [selectedToken, setSelectedToken] = useState("BUSD");
   const [numberOfTokens, setNumberOfTokens] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [amountToReceive, setAmountToReceive] = useState("");
+  const [amountToSend, setAmountToSend] = useState("");
   const [selectedNetwork, setSelectedNetwork] = useState("Starknet");
   const [walletAddress, setWalletAddress] = useState("");
 
@@ -99,7 +99,7 @@ function OnrampPage() {
     // Call getExchangeRate function with the selected token and numberOfTokens
     try {
       const amountInKesReceived = await getExchangeRate(selectedToken, tokens);
-      setAmountToReceive(String(amountInKesReceived));
+      setAmountToSend(String(amountInKesReceived));
       console.log(amountInKesReceived);
     } catch (error) {
       console.error("Error fetching exchange rate", error);
@@ -134,12 +134,12 @@ function OnrampPage() {
   //event handler for Offramp button
   const handleButtonClick = async () => {
     // Ensure all required fields are filled
-    if (phoneNumber && amountToReceive && selectedToken && numberOfTokens && selectedNetwork && walletAddress) {
+    if (phoneNumber && amountToSend && selectedToken && numberOfTokens && selectedNetwork && walletAddress) {
       try {
         // Collect all information from the custom text fields
         const requestData = {
           phoneNumber: phoneNumber,
-          amountToReceive: amountToReceive,
+          amountToSend: amountToSend,
           selectedToken: selectedToken,
           numberOfTokens: numberOfTokens,
           selectedNetwork: selectedNetwork,
@@ -264,7 +264,7 @@ function OnrampPage() {
               <Box sx={{ mt: "7%" }}>
                 <Typography sx={{ mb: "2%" }}>Amount to Send :</Typography>
                 <CustomTextField
-                  value={amountToReceive}
+                  value={amountToSend}
                   placeholder="Amount to receive"
                   sx={{ width: "100%" }}
                   onChange={handleNumberOfTokensChange} // Assuming you want to use the same function
