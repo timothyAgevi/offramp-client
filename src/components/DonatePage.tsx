@@ -48,5 +48,14 @@ const handleTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(phoneNumber);
   };
 
+  //event handler for phoneNumberChange
+  const handleAmountToSendChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const amountToSend = event.target.value;
+    setAmountToSend(amountToSend);
+  };
+
+
 }
 export default DonatePage;
