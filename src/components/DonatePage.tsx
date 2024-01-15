@@ -19,6 +19,8 @@ import AppProvider, { useAppContext } from "../providers/AppProvider";
 function DonatePage(){
 const [selectedToken, setSelectedToken] = useState("BUSD");
 const [numberOfTokens, setNumberOfTokens] = useState("");
+const [phoneNumber, setPhoneNumber] = useState("");
+const [amountToSend, setAmountToSend] = useState("");
 
 
   const {handleConnetWalletBtnClick,address}=useAppContext()
