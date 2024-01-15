@@ -3,14 +3,25 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import OfframpPage from '../components/OfframpPage'
-
-
+import DonatePage from "@/components/DonatePage";
+import OnrampPage from "@/components/OnrampPage";
 
 const HomePage = () => {
-  const [currentPage, setCurrentPage] = useState("onramp");
+  const [currentPage, setCurrentPage] = useState("offramp");
   const router = useRouter();
+
   const handlePageToggle = () => {
-    setCurrentPage((current: string) => (current === "onramp" ? "offramp" : "onramp"));
+    setCurrentPage((current: string) => {
+      switch (current) {
+        case "offramp":
+          return "onramp";
+        case "onramp":
+          return "donate";
+        case "donate":
+        default:
+          return "offramp";
+      }
+    });
   };
 
   useEffect(() => {
@@ -19,7 +30,11 @@ const HomePage = () => {
 
   return (
     <div>
-      <OfframpPage />
+      {currentPage === "offramp" && <OfframpPage />}
+      {currentPage === "onramp" && <OnrampPage />}
+      {currentPage === "donate" && <DonatePage />}
+      
+      {/* <button onClick={handlePageToggle}>Toggle Page</button> */}
     </div>
   );
 };
