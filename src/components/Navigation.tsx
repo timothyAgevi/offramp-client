@@ -50,7 +50,7 @@ const Navigation = () => {
       }}>
         <CustomNavlinkV2 href={'/'} label={'Offramp'} />
         <CustomNavlinkV2 href={'/onramp'} label={'Onramp'} />
-        
+        <CustomNavlinkV2 href={'/donate'} label={'Donations'} />
       </div>
     );
   };
