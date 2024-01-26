@@ -16,6 +16,7 @@ import axios from "axios";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
 
 import {getExchangeRate} from "kibokogetpricehook";
+
 const currencies = [
   {
     value: "USDC",
@@ -40,9 +41,6 @@ function OfframpPage() {
   const [recipientPhoneNumber, setRecipientPhoneNumber] = useState("");
   const [amountToReceive, setAmountToReceive] = useState("");
 
-  // state for currency rate
-// const [exchangeRate, setExchangeRate] = useState<number>(0);
-// const [baseCoinRate, setBaseCoin] = useState<number>(0);
 
 const {address,handleConnetWalletBtnClick}=useAppContext();
 

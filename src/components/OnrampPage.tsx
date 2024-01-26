@@ -15,6 +15,7 @@ import { PinkButton } from "@/components/buttons";
 import { useState } from "react";
 import axios from "axios";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
+import {getExchangeRate} from "kibokogetpricehook";
 
 const currencies = [
   {
@@ -57,32 +58,7 @@ function OnrampPage() {
 
   // const { address } = useAppContext();
 
-  const getExchangeRate = async (symbol: any, amount: any) => {
-    try {
-      const response = await axios.get(
-        `https://api.coinbase.com/v2/exchange-rates?currency=${symbol}`
-      );
-
-      // Check if the response is successful
-      if (response.status === 200) {
-        const data = response.data;
-        if (data && data.data && data.data.rates && data.data.rates.KES) {
-          const baseCoinRate: number = data.data.rates.KES;
-          const amountInKesReceived: number = amount * baseCoinRate;
-
-          setExchangeRate(Number(amountInKesReceived.toFixed(2))); // convert to number and set state
-          setBaseCoin(baseCoinRate);
-          return amountInKesReceived;
-        } else {
-          console.log("No exchange rate data found for KES");
-        }
-      } else {
-        console.log("Failed to fetch exchange rate from Coinbase API");
-      }
-    } catch (error) {
-      console.log("Unable to get exchange rate", error);
-    }
-  };
+ 
 
   const handleTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const token = event.target.value;
