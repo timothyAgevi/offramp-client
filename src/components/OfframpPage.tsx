@@ -47,26 +47,24 @@ const {address,handleConnetWalletBtnClick}=useAppContext();
 
  
 
-  const handleTokenChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    const token = event.target.value;
-    setSelectedToken(token);
-    // Call getExchangeRate function with the selected token and numberOfTokens
-    getExchangeRate(token, numberOfTokens);
-  };
+  // For general exchange rate
+const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const token = event.target.value;
+  setSelectedToken(token);
+  getExchangeRate(token, numberOfTokens);
+};
 
-  const handleNumberOfTokensChange = async (event:React.ChangeEvent<HTMLInputElement>) => {
-    const tokens = event.target.value;
-    setNumberOfTokens(tokens);
-    // Call getExchangeRate function with the selected token and numberOfTokens
-try{
-  const amountInKesReceived= await getExchangeRate(selectedToken, tokens);
-  setAmountToReceive(String(amountInKesReceived));
-  console.log(amountInKesReceived);
-}catch(error){
-  console.error("Error fetching exchange rate", error);
-}  
-   
-  };
+const handleNumberOfTokensChangeForExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const tokens = event.target.value;
+  setNumberOfTokens(tokens);
+  try {
+    const amountInKesReceived = await getExchangeRate(selectedToken, tokens);
+    setAmountToReceive(String(amountInKesReceived));
+    console.log(amountInKesReceived);
+  } catch (error) {
+    console.error("Error fetching exchange rate", error);
+  }
+};
 
 //event handler for RecipientPhoneNumberChange
   const handleRecipientPhoneNumberChange = (
@@ -125,7 +123,7 @@ const handleButtonClick = async () => {
                   defaultValue="BUSD"
                   sx={{ width: "100%" }}
                   select
-                  onChange={handleTokenChange}
+                  onChange={handleTokenChangeForExchangeRate}
                   SelectProps={{
                     MenuProps: {
                       PaperProps: {
@@ -161,7 +159,7 @@ const handleButtonClick = async () => {
                 <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
                 <CustomTextField
                   value={numberOfTokens}
-                  onChange={handleNumberOfTokensChange}
+                  onChange={handleNumberOfTokensChangeForExchangeRate}
                   
                   placeholder="0"
                   sx={{ width: "100%" }}
@@ -208,7 +206,7 @@ const handleButtonClick = async () => {
                   value={amountToReceive}
                   placeholder="Amount to receive"
                   sx={{ width: "100%" }}
-                  onChange={handleNumberOfTokensChange} // Assuming you want to use the same function
+                  onChange={handleNumberOfTokensChangeForExchangeRate} // Assuming you want to use the same function
                   inputProps={{
                     sx: {
                       "&::placeholder": {
