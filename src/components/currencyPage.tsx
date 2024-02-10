@@ -42,14 +42,14 @@ function CurrencyPage() {
 
 
 // For currency-specific exchange rate
-const handleTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
+const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
     const token = event.target.value;
     setSelectedToken(token);
     getCurrencyExchangeRate(token, numberOfTokens, ratesData);
   
   };
   
-  const handleNumberOfTokensChangeForCurrencyExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumberOfTokensChangeForExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const tokens = event.target.value;
     setNumberOfTokens(tokens);
     try {
@@ -62,12 +62,12 @@ const handleTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<HTMLI
   };
   
   //event handler for RecipientPhoneNumberChange
-    const handleRecipientPhoneNumberChange = (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      const phoneNumber = event.target.value;
-      setRecipientPhoneNumber(phoneNumber);
-    };
+    // const handleRecipientPhoneNumberChange = (
+    //   event: React.ChangeEvent<HTMLInputElement>
+    // ) => {
+    //   const phoneNumber = event.target.value;
+    //   setRecipientPhoneNumber(phoneNumber);
+    // };
     // Update the function to use the state variables directly
 const handleButtonClick = async () => {
     // Ensure both phone number and amount to receive are filled
@@ -116,7 +116,7 @@ const handleButtonClick = async () => {
                     defaultValue="BTC"
                     sx={{ width: "100%" }}
                     select
-                    onChange={handleNumberOfTokensChangeForCurrencyExchangeRate}
+                    onChange={handleTokenChangeForExchangeRate}
                     SelectProps={{
                       MenuProps: {
                         PaperProps: {
@@ -154,7 +154,7 @@ const handleButtonClick = async () => {
                     defaultValue="BTC"
                     sx={{ width: "100%" }}
                     select
-                    onChange={handleNumberOfTokensChangeForCurrencyExchangeRate}
+                    onChange={handleTokenChangeForExchangeRate}
                     SelectProps={{
                       MenuProps: {
                         PaperProps: {
@@ -186,27 +186,27 @@ const handleButtonClick = async () => {
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Box sx={{}}>
-                  <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
-                  <CustomTextField
-                    value={numberOfTokens}
-                    onChange={handleNumberOfTokensChangeForCurrencyExchangeRate}
-                    
-                    placeholder="0"
-                    sx={{ width: "100%" }}
-                    inputProps={{
-                      sx: {
-                        "&::placeholder": {
-                          color: "#fff",
-                        },
+              <Box sx={{}}>
+                <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
+                <CustomTextField
+                  value={numberOfTokens}
+                  onChange={handleNumberOfTokensChangeForExchangeRate}
+                  
+                  placeholder="0"
+                  sx={{ width: "100%" }}
+                  inputProps={{
+                    sx: {
+                      "&::placeholder": {
                         color: "#fff",
-                        backgroundColor: "grey",
-                        borderRadius: "12px",
                       },
-                    }}
-                  ></CustomTextField>
-                </Box>
-              </Grid>
+                      color: "#fff",
+                      backgroundColor: "grey",
+                      borderRadius: "12px",
+                    },
+                  }}
+                ></CustomTextField>
+              </Box>
+            </Grid>
             
               <Grid item xs={12} md={6}>
                 <Box sx={{ mt: "7%" }}>
@@ -215,7 +215,7 @@ const handleButtonClick = async () => {
                     value={amountToReceive}
                     placeholder="Amount to receive"
                     sx={{ width: "100%" }}
-                    onChange={handleNumberOfTokensChangeForCurrencyExchangeRate} // Assuming you want to use the same function
+                    onChange={handleNumberOfTokensChangeForExchangeRate} // Assuming you want to use the same function
                     inputProps={{
                       sx: {
                         "&::placeholder": {
