@@ -14,7 +14,7 @@ import { PinkButton } from "@/components/buttons";
 import { CustomTextField } from "@/components/textBox";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
 import { useEffect, useState } from "react"; 
-import {getExchangeRate, getCurrencyExchangeRate} from "kibokogetpricehook";
+import {getCurrencyExchangeRate} from "kibokogetpricehook";
 const currencies = [
     {
       value: "USDC",
@@ -61,13 +61,8 @@ const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElem
     }
   };
   
-  //event handler for RecipientPhoneNumberChange
-    // const handleRecipientPhoneNumberChange = (
-    //   event: React.ChangeEvent<HTMLInputElement>
-    // ) => {
-    //   const phoneNumber = event.target.value;
-    //   setRecipientPhoneNumber(phoneNumber);
-    // };
+ 
+  
     // Update the function to use the state variables directly
 const handleButtonClick = async () => {
     // Ensure both phone number and amount to receive are filled
@@ -249,41 +244,3 @@ const handleButtonClick = async () => {
     }
     
     export default CurrencyPage;
-
-// For general exchange rate
-// const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     const token = event.target.value;
-//     setSelectedToken(token);
-//     getExchangeRate(token, numberOfTokens);
-//   };
-  
-//   const handleNumberOfTokensChangeForExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
-//     const tokens = event.target.value;
-//     setNumberOfTokens(tokens);
-//     try {
-//       const amountInKesReceived = await getExchangeRate(selectedToken, tokens);
-//       setAmountToReceive(String(amountInKesReceived));
-//       console.log(amountInKesReceived);
-//     } catch (error) {
-//       console.error("Error fetching exchange rate", error);
-//     }
-//   };
-// For currency-specific exchange rate
-// const handleTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
-//   const token = event.target.value;
-//   setSelectedToken(token);
-//   getCurrencyExchangeRate(token, numberOfTokens, ratesData);
-
-// };
-
-// const handleNumberOfTokensChangeForCurrencyExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
-//   const tokens = event.target.value;
-//   setNumberOfTokens(tokens);
-//   try {
-//     const amountInCurrencyReceived = await getCurrencyExchangeRate(selectedToken, tokens, ratesData);
-//     setAmountToReceive(String(amountInCurrencyReceived));
-//     console.log(amountInCurrencyReceived);
-//   } catch (error) {
-//     console.error("Error fetching exchange rate", error);
-//   }
-// };

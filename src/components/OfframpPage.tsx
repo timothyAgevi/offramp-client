@@ -15,7 +15,7 @@ import { useState } from "react";
 import axios from "axios";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
 
-import {getExchangeRate} from "kibokogetpricehook";
+import {getOffRampExchangeRateInKES} from "kibokogetpricehook";
 
 const currencies = [
   {
@@ -51,14 +51,14 @@ const {address,handleConnetWalletBtnClick}=useAppContext();
 const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
   const token = event.target.value;
   setSelectedToken(token);
-  getExchangeRate(token, numberOfTokens);
+  getOffRampExchangeRateInKES(token, numberOfTokens);
 };
 
 const handleNumberOfTokensChangeForExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const tokens = event.target.value;
   setNumberOfTokens(tokens);
   try {
-    const amountInKesReceived = await getExchangeRate(selectedToken, tokens);
+    const amountInKesReceived = await getOffRampExchangeRateInKES(selectedToken, tokens);
     setAmountToReceive(String(amountInKesReceived));
     console.log(amountInKesReceived);
   } catch (error) {

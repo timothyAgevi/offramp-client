@@ -15,7 +15,7 @@ import { PinkButton } from "@/components/buttons";
 import { useState } from "react";
 import axios from "axios";
 import AppProvider, { useAppContext } from "../providers/AppProvider";
-import {getExchangeRate} from "kibokogetpricehook";
+import {getOnrampExchangeRateInKES} from "kibokogetpricehook";
 
 const currencies = [
   {
@@ -63,8 +63,8 @@ function OnrampPage() {
   const handleTokenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const token = event.target.value;
     setSelectedToken(token);
-    // Call getExchangeRate function with the selected token and numberOfTokens
-    getExchangeRate(token, numberOfTokens);
+    // Call getOnrampExchangeRateInKES function with the selected token and numberOfTokens
+    getOnrampExchangeRateInKES(token, numberOfTokens);
   };
 
   const handleNumberOfTokensChange = async (
@@ -72,9 +72,9 @@ function OnrampPage() {
   ) => {
     const tokens = event.target.value;
     setNumberOfTokens(tokens);
-    // Call getExchangeRate function with the selected token and numberOfTokens
+    // Call getOnrampExchangeRateInKES function with the selected token and numberOfTokens
     try {
-      const amountInKesReceived = await getExchangeRate(selectedToken, tokens);
+      const amountInKesReceived = await getOnrampExchangeRateInKES(selectedToken, tokens);
       setAmountToSend(String(amountInKesReceived));
       console.log(amountInKesReceived);
     } catch (error) {
