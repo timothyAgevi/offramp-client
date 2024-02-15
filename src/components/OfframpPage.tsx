@@ -27,6 +27,18 @@ const currencies = [
     label: "BUSD",
   },
   {
+    value: "AAVE",
+    label: "AAVE",
+  },
+  {
+    value: "KES",
+    label: "KES",
+  },
+  {
+    value: "BTC",
+    label: "BTC",
+  },
+  {
     value: "STRK",
     label: "STRK",
   },

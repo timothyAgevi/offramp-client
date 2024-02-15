@@ -1,88 +1,138 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import {
   Box,
   Container,
   Grid,
   MenuItem,
-  Toolbar,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import { PinkButton } from "@/components/buttons";
 import { CustomTextField } from "@/components/textBox";
-import AppProvider, { useAppContext } from "../providers/AppProvider";
-import { useEffect, useState } from "react"; 
-import {getCurrencyExchangeRate} from "kibokogetpricehook";
+import { PinkButton } from "@/components/buttons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useAppContext } from "../providers/AppProvider";
+
+// type RatesData = {
+//   [key: string]: number;
+// };
+
+async function getCurrencyExchangeRate(fromCurrency: string, toCurrency: string, amount: number) {
+  try {
+    const response = await axios.get(`https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`);
+    if (response.status === 200) {
+      const data = response.data;
+      if (data && data.data && data.data.rates && data.data.rates[toCurrency]) {
+        const baseCoinRate: number = data.data.rates[toCurrency];
+        const amountInCurrencyReceived: number = amount * baseCoinRate;
+        return amountInCurrencyReceived;
+      } else {
+        console.log("No exchange rate data found for", toCurrency);
+      }
+    } else {
+      console.log("Failed to fetch exchange rate from Coinbase API");
+    }
+  } catch (error) {
+    console.log("Unable to get exchange rate", error);
+  }
+}
+
 const currencies = [
-    {
-      value: "USDC",
-      label: "USDC",
-    },
-    {
-      value: "BUSD",
-      label: "BUSD",
-    },
-    {
-      value: "STRK",
-      label: "STRK",
-    },
-  ];
+  {
+    value: "USDC",
+    label: "USDC",
+  },
+  {
+    value: "BUSD",
+    label: "BUSD",
+  },
+  {
+    value: "AAVE",
+    label: "AAVE",
+  },
+  {
+    value: "KES",
+    label: "KES",
+  },
+  {
+    value: "BTC",
+    label: "BTC",
+  },
+  {
+    value: "STRK",
+    label: "STRK",
+  },
+];
+
 function CurrencyPage() {
-    const [selectedToken, setSelectedToken] = useState("BUSD");
-    const [numberOfTokens, setNumberOfTokens] = useState("");
-    const [recipientPhoneNumber, setRecipientPhoneNumber] = useState("");
-    const [amountToReceive, setAmountToReceive] = useState("");
-    const [ratesData, setRatesData] = useState({});
-  
-  
-  const {address,handleConnetWalletBtnClick}=useAppContext();
-  
+  const [fromCurrency, setFromCurrency] = useState<string>("BTC");
+  const [toCurrency, setToCurrency] = useState<string>("KES");
+  const [numberOfTokens, setNumberOfTokens] = useState<number | "">(0);
+  const [recipientPhoneNumber, setRecipientPhoneNumber] = useState<string>("");
+  const [amountToReceive, setAmountToReceive] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const { address, handleConnetWalletBtnClick } = useAppContext();
 
+  useEffect(() => {
+    const fetchRatesData = async () => {
+      try {
+        const response = await axios.get(`https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`);
+        const data = response.data.data.rates;
+      } catch (error) {
+        console.error("Error fetching exchange rates", error);
+      }
+    };
+    fetchRatesData();
+  }, [fromCurrency]);
 
-// For currency-specific exchange rate
-const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const token = event.target.value;
-    setSelectedToken(token);
-    getCurrencyExchangeRate(token, numberOfTokens, ratesData);
-  
-  };
-  
-  const handleNumberOfTokensChangeForExchangeRate = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const tokens = event.target.value;
-    setNumberOfTokens(tokens);
-    try {
-      const amountInCurrencyReceived = await getCurrencyExchangeRate(selectedToken, tokens, ratesData);
-      setAmountToReceive(String(amountInCurrencyReceived));
-      console.log(amountInCurrencyReceived);
-    } catch (error) {
-      console.error("Error fetching exchange rate", error);
+  const handleTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<{ value: unknown }>, field: string) => {
+    const token = event.target.value as string;
+    if (field === "from") {
+      setFromCurrency(token);
+    } else if (field === "to") {
+      setToCurrency(token);
     }
   };
-  
- 
-  
-    // Update the function to use the state variables directly
-const handleButtonClick = async () => {
-    // Ensure both phone number and amount to receive are filled
+
+  const handleNumberOfTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.trim(); // Remove leading and trailing whitespace
+    if (value === "") {
+      setNumberOfTokens(""); // Set to empty string if input is empty
+      setAmountToReceive(""); // Reset amountToReceive when input is empty
+      return;
+    }
+    const tokens = parseFloat(value);
+    if (isNaN(tokens)) {
+      setErrorMessage("Invalid input. Please enter a valid number.");
+    } else {
+      setErrorMessage("");
+      setNumberOfTokens(tokens);
+      updateAmountToReceive(tokens);
+    }
+  };
+
+  const updateAmountToReceive = async (tokens: number) => {
+    try {
+      const amountInCurrencyReceived = await getCurrencyExchangeRate(fromCurrency, toCurrency, tokens);
+      setAmountToReceive(String(amountInCurrencyReceived));
+    } catch (error) {
+      console.error("Error fetching exchange rate", error);
+      setErrorMessage("Error fetching exchange rate. Please try again later.");
+    }
+  };
+
+  const handleButtonClick = async () => {
     if (recipientPhoneNumber && amountToReceive) {
       try {
-        // Collect all information from the custom text fields
         const requestData = {
           phoneNumber: recipientPhoneNumber,
           amountToReceive: amountToReceive,
-          selectedToken: selectedToken,
+          selectedToken: toCurrency,
           numberOfTokens: numberOfTokens,
         };
-  
-        // Send a request to the specified API endpoint
         const response = await axios.post(
           "https://offrampsdk-production.up.railway.app/api/offramptransaction/",
           requestData
         );
-  
-        // Handle the response as needed
         console.log("Conversion API Response:", response.data);
       } catch (error) {
         console.error("Error making API request", error);
@@ -91,156 +141,84 @@ const handleButtonClick = async () => {
       console.warn("Phone number and amount to receive are required.");
     }
   };
-  
-    return (
-        <>
-        <Head>
-          <title>Currency</title>
-          <meta name="description" content="Generated by create next app" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <Box>
-          
-          <Container maxWidth="sm" sx={{ mt: "50px" }}>
-            <Grid container spacing={4}>
+
+  return (
+    <>
+      <Head>
+        <title>Currency</title>
+        <meta name="description" content="Generated by create next app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Box>
+        <Container maxWidth="sm" sx={{ mt: "50px" }}>
+          <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography sx={{ mb: "2%" }}>From Currency :</Typography>
-                  <CustomTextField
-                    defaultValue="BTC"
-                    sx={{ width: "100%" }}
-                    select
-                    onChange={handleTokenChangeForExchangeRate}
-                    SelectProps={{
-                      MenuProps: {
-                        PaperProps: {
-                          style: {
-                            maxHeight: 200, // Set the maximum height for the menu
-                            background:
-                              "var(--gradient-1, linear-gradient(90deg, #FF0080 0%, #AA1CA6 100%))",
-                          },
-                        },
-                      },
-                    }}
-                    inputProps={{
-                      sx: {
-                        "&::placeholder": {
-                          color: "#fff",
-                        },
-                        color: "#fff",
-                        backgroundColor: "grey",
-                        borderRadius: "12px",
-                      },
-                    }}
-                  >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </CustomTextField>
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography sx={{ mb: "2%" }}>To Currency :</Typography>
-                  <CustomTextField
-                    defaultValue="BTC"
-                    sx={{ width: "100%" }}
-                    select
-                    onChange={handleTokenChangeForExchangeRate}
-                    SelectProps={{
-                      MenuProps: {
-                        PaperProps: {
-                          style: {
-                            maxHeight: 200, // Set the maximum height for the menu
-                            background:
-                              "var(--gradient-1, linear-gradient(90deg, #FF0080 0%, #AA1CA6 100%))",
-                          },
-                        },
-                      },
-                    }}
-                    inputProps={{
-                      sx: {
-                        "&::placeholder": {
-                          color: "#fff",
-                        },
-                        color: "#fff",
-                        backgroundColor: "grey",
-                        borderRadius: "12px",
-                      },
-                    }}
-                  >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </CustomTextField>
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={6}>
+              <Box>
+                <Typography sx={{ mb: "2%" }}>From Currency :</Typography>
+                <CustomTextField
+                  value={fromCurrency}
+                  sx={{ width: "100%" }}
+                  select
+                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForCurrencyExchangeRate(event, "from")}
+                >
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box>
+                <Typography sx={{ mb: "2%" }}>To Currency :</Typography>
+                <CustomTextField
+                  value={toCurrency}
+                  sx={{ width: "100%" }}
+                  select
+                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForCurrencyExchangeRate(event, "to")}
+                >
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
               <Box sx={{}}>
                 <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
                 <CustomTextField
                   value={numberOfTokens}
-                  onChange={handleNumberOfTokensChangeForExchangeRate}
-                  
+                  onChange={handleNumberOfTokenChangeForCurrencyExchangeRate}
                   placeholder="0"
                   sx={{ width: "100%" }}
-                  inputProps={{
-                    sx: {
-                      "&::placeholder": {
-                        color: "#fff",
-                      },
-                      color: "#fff",
-                      backgroundColor: "grey",
-                      borderRadius: "12px",
-                    },
-                  }}
-                ></CustomTextField>
+                />
               </Box>
             </Grid>
-            
-              <Grid item xs={12} md={6}>
-                <Box sx={{ mt: "7%" }}>
-                  <Typography sx={{ mb: "2%" }}>Amount to Receive :</Typography>
-                  <CustomTextField
-                    value={amountToReceive}
-                    placeholder="Amount to receive"
-                    sx={{ width: "100%" }}
-                    onChange={handleNumberOfTokensChangeForExchangeRate} // Assuming you want to use the same function
-                    inputProps={{
-                      sx: {
-                        "&::placeholder": {
-                          color: "#fff",
-                        },
-                        color: "#fff",
-                        backgroundColor: "grey",
-                        borderRadius: "12px",
-                      },
-                    }}
-                  ></CustomTextField>
-                </Box>
-              </Grid>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ mt: "7%" }}>
+                <Typography sx={{ mb: "2%" }}>Amount to Receive :</Typography>
+                <CustomTextField
+                  value={amountToReceive}
+                  placeholder="Amount to receive"
+                  sx={{ width: "100%" }}
+                  disabled
+                />
+              </Box>
             </Grid>
-  
-            <Box sx={{ mt: "7%", display: "flex", justifyContent: "center" }}>
-              <PinkButton 
-              
-               onClick={address ? handleButtonClick : handleConnetWalletBtnClick}
-  
-  
-               sx={{ width: "100%" }}> 
-              {address?'Offramp':'Connect wallet'}
-              
-              </PinkButton>
-            </Box>
-          </Container>
-        </Box>
-      </>
-      );
-    }
-    
-    export default CurrencyPage;
+          </Grid>
+          <Box sx={{ mt: "7%", display: "flex", justifyContent: "center" }}>
+            <PinkButton onClick={address ? handleButtonClick : handleConnetWalletBtnClick} sx={{ width: "100%" }}>
+              {address ? 'Offramp' : 'Connect wallet'}
+            </PinkButton>
+          </Box>
+        </Container>
+      </Box>
+    </>
+  );
+}
+
+export default CurrencyPage;
