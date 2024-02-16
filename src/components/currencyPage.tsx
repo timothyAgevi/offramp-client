@@ -12,9 +12,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../providers/AppProvider";
 
-type RatesData = {
-  [key: string]: number;
-};
+
 
 async function getCurrencyExchangeRate(fromCurrency: string, toCurrency: string, amount: number) {
   try {
