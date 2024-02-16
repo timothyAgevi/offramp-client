@@ -12,9 +12,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../providers/AppProvider";
 
-// type RatesData = {
-//   [key: string]: number;
-// };
+type RatesData = {
+  [key: string]: number;
+};
 
 async function getCurrencyExchangeRate(fromCurrency: string, toCurrency: string, amount: number) {
   try {
@@ -75,16 +75,17 @@ function CurrencyPage() {
   useEffect(() => {
     const fetchRatesData = async () => {
       try {
-        const response = await axios.get(`https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`);
-        const data = response.data.data.rates;
+        const tokens = typeof numberOfTokens === "number" ? numberOfTokens : parseFloat(numberOfTokens); // Convert numberOfTokens to number
+        const amountInCurrencyReceived = await getCurrencyExchangeRate(fromCurrency, toCurrency, tokens);
+        setAmountToReceive(String(amountInCurrencyReceived));
       } catch (error) {
         console.error("Error fetching exchange rates", error);
       }
     };
     fetchRatesData();
-  }, [fromCurrency]);
+  }, [fromCurrency, toCurrency, numberOfTokens]); // Watch for changes in fromCurrency, toCurrency, and numberOfTokens
 
-  const handleTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<{ value: unknown }>, field: string) => {
+  const handleTokenChangeForExchangeRate = (event: React.ChangeEvent<{ value: unknown }>, field: string) => {
     const token = event.target.value as string;
     if (field === "from") {
       setFromCurrency(token);
@@ -93,7 +94,7 @@ function CurrencyPage() {
     }
   };
 
-  const handleNumberOfTokenChangeForCurrencyExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumberOfTokensChangeForExchangeRate = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim(); // Remove leading and trailing whitespace
     if (value === "") {
       setNumberOfTokens(""); // Set to empty string if input is empty
@@ -106,17 +107,6 @@ function CurrencyPage() {
     } else {
       setErrorMessage("");
       setNumberOfTokens(tokens);
-      updateAmountToReceive(tokens);
-    }
-  };
-
-  const updateAmountToReceive = async (tokens: number) => {
-    try {
-      const amountInCurrencyReceived = await getCurrencyExchangeRate(fromCurrency, toCurrency, tokens);
-      setAmountToReceive(String(amountInCurrencyReceived));
-    } catch (error) {
-      console.error("Error fetching exchange rate", error);
-      setErrorMessage("Error fetching exchange rate. Please try again later.");
     }
   };
 
@@ -127,7 +117,7 @@ function CurrencyPage() {
           phoneNumber: recipientPhoneNumber,
           amountToReceive: amountToReceive,
           selectedToken: toCurrency,
-          numberOfTokens: numberOfTokens,
+          numberOfTokens: typeof numberOfTokens === "number" ? numberOfTokens : parseFloat(numberOfTokens), // Convert numberOfTokens to number
         };
         const response = await axios.post(
           "https://offrampsdk-production.up.railway.app/api/offramptransaction/",
@@ -160,7 +150,7 @@ function CurrencyPage() {
                   value={fromCurrency}
                   sx={{ width: "100%" }}
                   select
-                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForCurrencyExchangeRate(event, "from")}
+                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForExchangeRate(event, "from")}
                 >
                   {currencies.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -177,7 +167,7 @@ function CurrencyPage() {
                   value={toCurrency}
                   sx={{ width: "100%" }}
                   select
-                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForCurrencyExchangeRate(event, "to")}
+                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => handleTokenChangeForExchangeRate(event, "to")}
                 >
                   {currencies.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -192,7 +182,7 @@ function CurrencyPage() {
                 <Typography sx={{ mb: "2%" }}>Number of Tokens :</Typography>
                 <CustomTextField
                   value={numberOfTokens}
-                  onChange={handleNumberOfTokenChangeForCurrencyExchangeRate}
+                  onChange={handleNumberOfTokensChangeForExchangeRate}
                   placeholder="0"
                   sx={{ width: "100%" }}
                 />
